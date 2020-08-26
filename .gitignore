@@ -1,0 +1,8 @@
+bin/
+appsettings.json
+obj/
+.vscode/
+Migrations/
+MyContext.db
+belt_exam.csproj
+Program.cs

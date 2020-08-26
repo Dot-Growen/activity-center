@@ -1,0 +1,61 @@
+@model List<Activity>
+
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <h2>Dojo Activity Center</h2>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-nav align-items-center flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Home">Welcome
+                            @ViewBag.User.FirstName</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Date and Time</th>
+                <th>Duration</th>
+                <th>Event Coordinator</th>
+                <th>No. of Participants</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach(var m in Model)
+            {
+            <tr>
+                <td><a href="/activity/@m.ActivityId">@m.Title</a></td>
+                <td>@m.Date.ToString("d") @@ @m.Time.ToString("t")</td>
+                <td>@m.Duration @m.Durationstr</td>
+                <td>@m.Creator</td>
+                <td>@m.Participants.Count</td>
+                @{if(@m.Creator == ViewBag.User.FirstName) {
+                <td><a href="/delete/@m.ActivityId">Delete</a></td>
+                } else {
+                if (@m.Participants.All( p => p.UserId != ViewBag.User.UserId)) {
+                <td><a href="/join/@m.ActivityId/@ViewBag.User.UserId">join</a></td>
+                } else {
+                <td><a href="/leave/@m.ActivityId/@ViewBag.User.UserId">leave</a></td>
+                }}}
+            </tr>
+            }
+
+        </tbody>
+    </table>
+    <a class="btn btn-outline-primary" href="/new">Add New Activity</a>
